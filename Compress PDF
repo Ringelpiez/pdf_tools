@@ -2,10 +2,13 @@
 
 # AUTHOR:		Ricardo Ferreira; oriolpont
 # NAME:			Compress PDF 1.5
-# DESCRIPTION:	A nice Nemo script with a GUI to compress and optimize PDF files. ~/.local/share/nemo/scripts folder and make it executable 
+# DESCRIPTION:	A nice Nautilus script with a GUI to compress and optimize PDF files. ~/.local/share/nemo/scripts folder and make it executable 
 # REQUIRES:		ghostscript, poppler-utils, zenity, sed, python-notify (optional)
 # LICENSE:		GNU GPL v3 (http://www.gnu.org/licenses/gpl.html)
 # WEBSITE:		https://launchpad.net/compress-pdf
+
+# CHANGES:      The script has been changed from Nautilus to Nemo by Ringelpiez.
+
 
 VERSION="1.5"
 COMPRESSPDF_BATCH_ABORT_ERR=115
