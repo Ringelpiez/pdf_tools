@@ -1,0 +1,51 @@
+This is Nautilus script offers a right-click option for Nautilus to compress PDF files. It uses ghostscript as backend and zenity for a pseudo GUI.
+
+INSTALL:
+To install it, copy the file 'Compress PDF' to your ~/.local/share/nautilus/scripts folder and make it executable (either "right click > properties > permissions" in nautilus or run in a terminal "chmod +x ~/.local/share/nautilus/scripts/Compress\ PDF").
+
+
+GHOSTSCRIPT OPTIONS (TO ADAPT THE SCRIPT, UNDERSTAND IT OR OTHER):
+
+gs -dPDFSETTINGS=/screen -dCompatibilityLevel=1.4 -dNOPAUSE -dQUIET -dBATCH -sDEVICE=pdfwrite -sOutputFile=output.pdf input.pdf
+ /screen (72dpi), /ebook (150dpi), /printer (300dpi), /prepress (300dpi, colorpreserving) - /default is 72dpi in GS doc but ~300dpi in ubuntu
+
+some extra options:
+ -dCompatibilityLevel=1.4 (the higher the better; use 1.1 (unknown?; result differs), 1.2 for Acrobat3, 1.3 for Acrobat4 [default for screen] and 1.4 for Acrobat5 [default for the others])
+ -dSAFER (disable deletion and overwriting; recommended for scripts)
+ -dColorConversionStrategy=/LeaveColorUnchanged (/LeaveColorUnchanged is the default, but some PDFSETTINGS change it to /sRGB (/screen and /ebook; it has broken some images to me) or /UseDeviceIndependentColor (/printer) which I find it makes files larger)
+
+fine-tune image quality options:
+-dAutoFilterColorImages=false (automatically choose the following item or do not; default is true)
+-dColorImageFilter=/FlateEncode (for lossless deflate, use /DCTEncode for JPEG; /LZWEncode currently does nothing, but may do LZW in the future)
+-dDownsampleColorImages=true (allow downsampling; true for screen and ebook and false for the others)
+-dColorImageResolution=$DPI
+-dColorImageDownsampleType=/Bicubic (can also be /Average or /Subsample; current implementation treats /Bicubic as /Average)
+
+-dAutoFilterGrayImages=false
+-dGrayImageFilter=/FlateEncode
+-dDownsampleGrayImages=true
+-dGrayImageResolution=$DPI
+-dGrayImageDownsampleType=/Bicubic
+
+-dAutoFilterMonoImages=false
+-dMonoImageFilter=/CCITTFaxEncode (Huffman, default for all)
+-dDownsampleMonoImages=true
+-dMonoImageResolution=$DPI (300dpi for screen and ebook, 1200dpi for the others)
+-dMonoImageDownsampleType=/Bicubic
+
+nearly useless options:
+-sPAPERSIZE=[letter,a4]
+-dDEVICEWIDTHPOINTS=w -dDEVICEHEIGHTPOINTS=h (point=1/72 of an inch)
+-dFIXEDMEDIA (force paper size over the PostScript defined size)
+-dFirstPage=pagenumber
+-dLastPage=pagenumber
+-dAutoRotatePages=[/PageByPage,/All,/None]
+-sPDFPassword=password
+-r72 (dpi resolution of the output device; does not seem to have any effect in our case)
+-dOptimize=true (does not seem to work; use pdfopt)
+-dEmbedAllFonts=true (seems to be the default)
+-dSubsetFonts=true (seems to be the default; set it to 'false' to embed the whole fonts; works only if the previous is true)
+-dMaxSubsetPct=100 (embed as subset if the % of glyphs used in the text is less than that; works only if the previous is true)
+
+Read more @ http://web.mit.edu/ghostscript/www/Ps2pdf.htm#Options
+
